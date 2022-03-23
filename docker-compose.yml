@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    container_name: xss_db
+    ports:
+      - "5433:5432"
+    networks:
+      - xss-net
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=xss
+  xss-app:
+    build : .
+    container_name: xss_app
+    depends_on:
+      - postgres
+    links:
+      - xss_db
+    ports:
+      - "2345:2345"
+    networks:
+      - xss-net
+networks:
+  xss-net:
+    driver: bridge
